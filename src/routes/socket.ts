@@ -1,9 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { roleSets } from "../constants/RoleSet";
 import shuffle from "../utils/shuffle";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 interface Room {
   key: string;
@@ -204,23 +201,17 @@ export function registerSocketEvents(io: Server, socket: Socket) {
     callback?.({ success: true });
   });
 
-  // Handle disconnect
   socket.on("disconnect", () => {
     for (const [roomName, roomData] of roomPlayers.entries()) {
       const index = roomData.players.indexOf(socket);
       if (index !== -1) {
         roomData.players.splice(index, 1);
 
-        // Notify other players in the room
-        io.to(roomName).emit("player-left", {
-          socketId: socket.id,
-          remainingPlayers: roomData.players.length,
-        });
-
         if (roomData.players.length === 0) {
           roomPlayers.delete(roomName);
         }
 
+        console.log("❌ Disconnected: ", socket.id);
         break;
       }
     }

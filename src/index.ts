@@ -4,12 +4,15 @@ import express from "express";
 import cors from "cors";
 import { registerSocketEvents } from "./routes/socket";
 import httpRouter from "./routes/http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.WEB_URL,
     credentials: true,
   })
 );
@@ -24,9 +27,11 @@ const port = process.env.PORT || 3001;
 
 io.on("connection", (socket) => {
   registerSocketEvents(io, socket);
-  console.log("Connected: ", socket.id);
+  console.log("✅ Connected: ", socket.id);
 });
 
 server.listen(port, () => {
-  console.log(`Avalon server running on http://localhost:${port}`);
+  console.log(
+    `✅ Avalon server is successfully running on ${process.env.SERVER_URL}`
+  );
 });
