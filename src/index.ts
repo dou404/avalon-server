@@ -27,7 +27,7 @@ const port = process.env.PORT || 3001;
 
 io.on("connection", (socket) => {
   registerSocketEvents(io, socket);
-  console.log("✅ Connected: ", socket.id);
+  console.log("Connected: ", socket.id);
 });
 
 server.listen(port, () => {
