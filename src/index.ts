@@ -1,4 +1,4 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 import express from "express";
 import cors from "cors";
@@ -19,16 +19,12 @@ app.use(
 app.use(express.json());
 app.use("/api", httpRouter);
 
+const port = process.env.PORT || 3001;
+
 const io = new Server(server, {
   cors: { origin: "*" },
 });
-
-const port = process.env.PORT || 3001;
-
-io.on("connection", (socket) => {
-  registerSocketEvents(io, socket);
-  console.log("Connected: ", socket.id);
-});
+registerSocketEvents(io);
 
 server.listen(port, () => {
   console.log(
