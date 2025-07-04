@@ -18,6 +18,9 @@ app.use(
 );
 app.use(express.json());
 app.use("/api", httpRouter);
+app.get('/', (_, res) => {
+  res.send('a v a l o n');
+});
 
 const port = process.env.PORT || 3001;
 

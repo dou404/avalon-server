@@ -22,6 +22,7 @@ interface RoomData {
 }
 
 const roomPlayers = new Map<string, RoomData>();
+
 const validRoomKeys = process.env.VALID_ROOM_KEYS?.split(",") || [];
 
 const getRoomListArray = () =>
@@ -232,6 +233,18 @@ export function registerSocketEvents(io: Server) {
 
       const room = getRoomByRoomName(roomName);
       io.to(roomName).except(socket.id).emit("game-finished", { room });
+    });
+
+    socket.on("logout", (callback) => {
+      if (!userName)
+        return callback?.({
+          success: false,
+          message: "Not registered username!",
+        });
+
+      userSocketMap.delete(userName);
+
+      return callback?.({ success: true });
     });
 
     socket.on("disconnect", () => {
